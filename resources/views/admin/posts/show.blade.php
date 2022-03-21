@@ -20,7 +20,13 @@
       @if($post->image)
       <img src="{{asset("storage/{$post->image}")}}">
       @endif
-      <p>Post Category: <span> {{$post->category ? $post->category->name : '-'}}</span></p>
+      <p class="font-weight-bold">Post Category: <span class="font-weight-normal"> {{$post->category ? $post->category->name : '-'}}</span></p>
+      <div class="post-tags pb-3">
+        <span class="font-weight-bold">Tags: </span>
+       @foreach ($post->tags as $tag)
+       <span> {{$tag->name}}</span>
+       @endforeach
+      </div>
       <div class="buttons">
         <a href="{{route("admin.posts.edit", $post->id)}}"><button class="btn btn-edit">Edit</button></a>
         <form action="{{route("admin.posts.destroy", $post->id)}}" method="POST">

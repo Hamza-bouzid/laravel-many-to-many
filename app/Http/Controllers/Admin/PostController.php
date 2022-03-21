@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Post;
 use App\Category;
+use App\Tag;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -16,7 +17,8 @@ class PostController extends Controller
         'title' => 'required|max:255',
         'content' => 'required',
         'category_id' => 'nullable|exists:categories,id',
-        //'image' => 'nullable|image|mimes:jped,bmp,png'
+        'image' => 'nullable|image|mimes:jped,bmp,png',
+        'tags' => 'nullable|exists:tags,id'
      ];
 
     /**
@@ -40,7 +42,8 @@ class PostController extends Controller
     public function create()
     {
         $categories = Category::all();
-        return view('admin.posts.create', compact('categories'));
+        $tags = Tag::all();
+        return view('admin.posts.create', compact('categories', 'tags'));
     }
 
     /**
@@ -76,6 +79,7 @@ class PostController extends Controller
         $newPost = new Post();
         $newPost->fill($data);
         $newPost->save();
+        $newPost->tags()->sync(isset($data['tags']) ? $data['tags'] : [] );
 
         return redirect()->route('admin.posts.show', $newPost->id);
     }
@@ -100,7 +104,8 @@ class PostController extends Controller
     public function edit(Post $post)
     {
         $categories = Category::all();
-        return view('admin.posts.edit', compact('post', 'categories'));
+        $tags = Tag::all();
+        return view('admin.posts.edit', compact('post', 'categories', 'tags'));
     }
 
     /**
@@ -131,6 +136,7 @@ class PostController extends Controller
         }
         $data['slug']= $slugTmp;
         $post->update($data);
+        $post->tags()->sync(isset($data['tags']) ? $data['tags'] : [] );
 
         return redirect()->route('admin.posts.show', $post->id);
     }

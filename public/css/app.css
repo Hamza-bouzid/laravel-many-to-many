@@ -11003,10 +11003,6 @@ h1 {
   max-width: 100%;
 }
 
-.posts .post-category span {
-  font-weight: 600;
-}
-
 .buttons {
   display: flex;
   justify-content: center;
